@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow p-4 border-0">
+
+            {# Título principal da página de reserva #}
+            <h2 class="mb-4 fw-bold">Reserva de Veículo</h2>
+
+            {# Informações detalhadas e imagem da viatura selecionada #}
+            <div class="row mb-4 align-items-center">
+                <div class="col-md-5">
+                    <img src="{{ url_for('static', filename=veiculo.imagem_url) }}" class="img-fluid rounded shadow-sm" alt="{{ veiculo.modelo }}" style="height: 180px; width: 100%; object-fit: cover;">
+                </div>
+                <div class="col-md-7">
+                    <h4>{{ veiculo.marca }} {{ veiculo.modelo }}</h4>
+                    <p class="text-muted mb-1">Categoria: {{ veiculo.categoria }} | Tipo: {{ veiculo.tipo }} | Combustível: {{ veiculo.combustivel or 'Gasolina' }}</p>
+                    <p class="fs-5 fw-bold text-success mb-0">Preço Diário: {{ "%.2f"|format(veiculo.valor_diaria) }} €</p>
+                </div>
+            </div>
+
+            {# Formulário para seleção de datas e método de pagamento #}
+            <form method="POST">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Data de Início</label>
+                        {# min="{{ hoje }}" impede selecionar dias anteriores ao dia atual #}
+                        <input type="date" id="data_inicio" name="data_inicio" class="form-control" min="{{ hoje }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Data de Fim</label>
+                        <input type="date" id="data_fim" name="data_fim" class="form-control" min="{{ hoje }}" required>
+                    </div>
+                </div>
+
+                {# Seleção da forma de pagamento #}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Forma de Pagamento</label>
+                    <select name="forma_pagamento" class="form-select" required>
+                        <option value="" disabled selected>Selecionar método de pagamento...</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Multibanco">Multibanco</option>
+                        <option value="MB Way">MB Way</option>
+                        <option value="Transferência Bancária">Transferência Bancária</option>
+                        <option value="Dinheiro (No Local)">Dinheiro (No Local)</option>
+                    </select>
+                </div>
+
+                {# Caixa informativa com o cálculo dinâmico do valor total #}
+                <div class="alert alert-info d-flex justify-content-between align-items-center shadow-sm">
+                    <span class="fw-bold">Valor Total Estimado:</span>
+                    <strong id="valor_total_visor" class="fs-4 text-dark">0.00 €</strong>
+                </div>
+
+                {# Botão de submissão da reserva #}
+                <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">Concluir Reserva</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{# Script JavaScript para cálculo automático do preço total em função dos dias selecionados #}
+<script>
+    const valorDiaria = {{ veiculo.valor_diaria }};
+    const inputInicio = document.getElementById('data_inicio');
+    const inputFim = document.getElementById('data_fim');
+    const visorTotal = document.getElementById('valor_total_visor');
+
+    function calcularTotal() {
+        if (inputInicio.value && inputFim.value) {
+            const inicio = new Date(inputInicio.value);
+            const fim = new Date(inputFim.value);
+            const diffTime = fim - inicio;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 0) {
+                const total = diffDays * valorDiaria;
+                visorTotal.textContent = total.toFixed(2) + ' €';
+            } else {
+                visorTotal.textContent = '0.00 € (Data de fim inválida)';
+            }
+        }
+    }
+
+    // Atualiza dinamicamente a data mínima de fim para o dia seguinte ao início selecionado
+    inputInicio.addEventListener('change', function() {
+        if (inputInicio.value) {
+            inputFim.min = inputInicio.value;
+        }
+        calcularTotal();
+    });
+
+    inputFim.addEventListener('change', calcularTotal);
+</script>
+{% endblock %}

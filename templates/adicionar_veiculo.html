@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4 border-0">
+                <h2 class="mb-4 fw-bold text-center">Adicionar Novo Veículo</h2>
+
+                {# Formulário para registo de um novo veículo na frota (suporta upload de ficheiros e URLs) #}
+                <form method="POST" enctype="multipart/form-data">
+
+                    {# Informações Principais: Marca e Modelo #}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Marca</label>
+                            <input type="text" name="marca" class="form-control" required placeholder="Ex: BMW">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Modelo</label>
+                            <input type="text" name="modelo" class="form-control" required placeholder="Ex: Série 4">
+                        </div>
+                    </div>
+
+                    {# Classificação, Tipo e Combustível #}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Categoria</label>
+                            <select name="categoria" class="form-select" required>
+                                <option value="" disabled selected>Selecionar...</option>
+                                <option value="Utilitário">Utilitário</option>
+                                <option value="Desportivo">Desportivo</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Sedan">Sedan</option>
+                                <option value="Premium">Premium</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Tipo</label>
+                            <select name="tipo" class="form-select" required>
+                                <option value="Carro">Carro</option>
+                                <option value="Moto">Moto</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Combustível</label>
+                            <select name="combustivel" class="form-select" required>
+                                <option value="Gasolina">Gasolina</option>
+                                <option value="Gasóleo">Gasóleo</option>
+                                <option value="Elétrico">Elétrico</option>
+                                <option value="Híbrido">Híbrido</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {# Capacidade de Passageiros e Custo Diário #}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Capacidade (Lugares)</label>
+                            <input type="number" name="capacidade" class="form-control" required min="1" value="5">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Valor da Diária (€)</label>
+                            <input type="number" step="0.01" name="valor_diaria" class="form-control" required placeholder="150.00">
+                        </div>
+                    </div>
+
+                    {# Gestão Híbrida de Imagens (Upload local ou ligação externa) #}
+                    <div class="row mb-3 p-3 bg-light rounded border">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">Carregar Foto Real (PC)</label>
+                            <input type="file" name="imagem_file" class="form-control" accept="image/*">
+                            <div class="form-text">Tirar foto real no stand.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Ou Colar URL da Internet</label>
+                            <input type="url" name="imagem_url_externa" class="form-control" placeholder="https://exemplo.com/carro.jpg">
+                            <div class="form-text">Descarrega e guarda automaticamente.</div>
+                        </div>
+                    </div>
+
+                    {# Controlo de Manutenção e Legalização exigido pelo projeto #}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Última Revisão</label>
+                            <input type="date" name="data_ultima_revisao" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Próxima Revisão</label>
+                            <input type="date" name="data_proxima_revisao" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Última Legalização</label>
+                            <input type="date" name="data_ultima_legalizacao" class="form-control" required>
+                        </div>
+                    </div>
+
+                    {# Botão de Submissão do Formulário #}
+                    <button type="submit" class="btn btn-warning w-100 fw-bold py-2">Registar Veículo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center my-4">
+    {# Título Principal da Página Inicial #}
+    <h1 class="display-3 fw-bold text-warning mb-2 texto-sombra">
+        Luxury Wheels
+    </h1>
+
+    {# Slogan promocional da marca com destaque visual #}
+    <p class="lead text-dark fw-semibold fs-4">
+        Experimenta a emoção de conduzir os veículos <span class="text-warning fw-bold texto-sombra">mais exclusivos</span> do mercado.
+    </p>
+</div>
+
+{# ========================================== #}
+{# CARROSSEL DE VEÍCULOS EM DESTAQUE            #}
+{# ========================================== #}
+<div id="carouselDestaques" class="carousel slide shadow rounded-4 overflow-hidden mb-4" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for veiculo in veiculos %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+            <div class="position-relative" style="height: 480px;">
+                <img src="{{ url_for('static', filename=veiculo.imagem_url) }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="{{ veiculo.modelo }}">
+
+                {# Caixa de informação sobreposta no carrossel com dados da viatura #}
+                <div class="carousel-caption d-none d-md-block text-start bg-dark bg-opacity-75 p-4 rounded-3 shadow" style="max-width: 500px; left: 5%; bottom: 10%;">
+                    <h3 class="fw-bold text-warning mb-1">{{ veiculo.marca }} {{ veiculo.modelo }}</h3>
+                    <p class="fs-5 mb-0 text-white">{{ "%.2f"|format(veiculo.valor_diaria) }} € / dia <span class="badge bg-secondary ms-2">{{ veiculo.categoria }}</span></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {# Botões de controlo (Anterior / Seguinte) do carrossel #}
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDestaques" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselDestaques" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Seguinte</span>
+    </button>
+</div>
+
+{# Botão de Ação Direta: Explorar Frota #}
+<div class="text-center my-5">
+    <a href="{{ url_for('pesquisa') }}" class="btn btn-warning btn-lg fw-bold px-5 py-3 shadow rounded-pill fs-5">
+        Explorar Frota
+    </a>
+</div>
+
+{# ========================================== #}
+{# SECÇÃO DE DESTAQUE DE SERVIÇOS E VANTAGENS #}
+{# ========================================== #}
+<div class="row text-center mt-5 mb-5 g-4">
+
+    {# Cartão 1: Desporto e Luxo #}
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-lg rounded-4 cartao-imagem text-white overflow-hidden"
+             style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80');">
+            <div class="cartao-overlay d-flex flex-column justify-content-end p-4 h-100">
+                <h4 class="fw-bold text-warning mb-2">Desporto e Luxo</h4>
+                <p class="text-light small mb-0 fs-6">
+                    Veículos de última geração mantidos com os mais rigorosos padrões de manutenção e performance.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {# Cartão 2: Reserva Simples #}
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-lg rounded-4 cartao-imagem text-white overflow-hidden"
+             style="background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80');">
+            <div class="cartao-overlay d-flex flex-column justify-content-end p-4 h-100">
+                <h4 class="fw-bold text-warning mb-2">Reserva Simples</h4>
+                <p class="text-light small mb-0 fs-6">
+                    Processo 100% intuitivo e rápido, com simulação de custos em tempo real por dias de aluguer.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {# Cartão 3: Pagamento Seguro #}
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-lg rounded-4 cartao-imagem text-white overflow-hidden"
+             style="background-image: url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80');">
+            <div class="cartao-overlay d-flex flex-column justify-content-end p-4 h-100">
+                <h4 class="fw-bold text-warning mb-2">Pagamento Seguro</h4>
+                <p class="text-light small mb-0 fs-6">
+                    Garantia de transações seguras com múltiplos métodos de pagamento integrados.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{# ========================================== #}
+{# ESTILOS CSS PERSONALIZADOS E EFEITOS HOVER #}
+{# ========================================== #}
+<style>
+    .texto-sombra {
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .cartao-imagem {
+        height: 280px;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .cartao-overlay {
+        background: linear-gradient(to top, rgba(15, 15, 15, 0.95) 15%, rgba(15, 15, 15, 0.4) 70%, rgba(15, 15, 15, 0.2) 100%);
+        transition: background 0.3s ease-in-out;
+    }
+
+    .cartao-imagem:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(255, 193, 7, 0.3) !important;
+    }
+
+    .cartao-imagem:hover .cartao-overlay {
+        background: linear-gradient(to top, rgba(15, 15, 15, 0.98) 30%, rgba(15, 15, 15, 0.6) 80%, rgba(15, 15, 15, 0.3) 100%);
+    }
+</style>
+{% endblock %}

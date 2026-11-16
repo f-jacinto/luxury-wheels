@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    {# Título principal da página de reservas #}
+    <h2 class="mb-4 fw-bold">As Minhas Reservas</h2>
+
+    {# Verifica se existem reservas ativas para apresentar na tabela #}
+    {% if reservas_ativas %}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Veículo</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Total</th>
+                        <th>Pagamento</th>
+                        <th>Estado</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# Iteração por cada reserva ativa para preenchimento da tabela #}
+                    {% for r in reservas_ativas %}
+                    <tr>
+                        <td>{{ r.veiculo.marca }} {{ r.veiculo.modelo }}</td>
+                        <td>{{ r.data_inicio }}</td>
+                        <td>{{ r.data_fim }}</td>
+                        <td>{{ "%.2f"|format(r.valor_total) }} €</td>
+                        <td>{{ r.forma_pagamento }}</td>
+                        <td><span class="badge bg-success">{{ r.estado }}</span></td>
+                        <td>
+                            {# Botão de acesso à gestão ou cancelamento da respetiva reserva #}
+                            <a href="{{ url_for('editar_reserva', reserva_id=r.id) }}" class="btn btn-sm btn-outline-primary">Gerir / Cancelar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {# Mensagem informativa caso o utilizador ainda não tenha efetuado nenhuma reserva #}
+        <div class="alert alert-info shadow-sm">
+            Ainda não tens nenhuma reserva efetuada. <a href="{{ url_for('pesquisa') }}" class="alert-link">Explora a frota e faz a tua primeira reserva!</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

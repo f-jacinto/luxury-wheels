@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow p-4">
+
+            {# Cabeçalho e descrição da funcionalidade do painel de administração #}
+            <h2 class="mb-4 text-fw-bold text-danger">Painel Admin: Criar Operador</h2>
+            <p class="text-muted">Os operadores conseguem gerir reservas e meios de pagamento no sistema.</p>
+
+            {# Formulário para registo de uma nova conta de operador (exclusivo para administradores) #}
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Nome do Operador</label>
+                    <input type="text" name="nome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email Profissional</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Palavra-passe Temporária</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                {# Botão de submissão do formulário #}
+                <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">Criar Conta de Operador</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

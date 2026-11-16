@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow p-4">
+
+            {# Título principal da página de autenticação #}
+            <h2 class="mb-4 text-center fw-bold">Iniciar Sessão</h2>
+
+            {# Formulário de login para recolha de credenciais #}
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Endereço de Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Palavra-passe</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                {# Botão de submissão do formulário #}
+                <button type="submit" class="btn btn-warning w-100 py-2 fw-bold text-dark">Entrar</button>
+            </form>
+
+            {# Ligação de redirecionamento para o registo de novos utilizadores #}
+            <p class="text-center mt-3 text-muted">Ainda não tens conta? <a href="{{ url_for('registo') }}">Regista-te aqui</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

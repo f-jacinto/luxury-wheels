@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-4">
+    {# ========================================== #}
+    {# CARTÃO SUPERIOR DE BOAS-VINDAS E INFO      #}
+    {# ========================================== #}
+    <div class="card bg-dark text-white p-4 mb-4 shadow rounded-3 border-0">
+        <h1 class="text-warning fw-bold mb-2">Painel de Administração</h1>
+        <p class="text-light fs-5 mb-3">Bem-vindo. Aqui podes gerir os operadores e os utilizadores do sistema da Luxury Wheels.</p>
+
+        <div class="d-flex gap-3 flex-wrap">
+            <a href="#gestao-operadores" class="btn btn-warning fw-bold px-4 py-2">Gestão de Utilizadores </a>
+        </div>
+    </div>
+
+    {# ========================================== #}
+    {# SECÇÃO DE GESTÃO (FORMULÁRIO E TABELA)     #}
+    {# ========================================== #}
+    <div id="gestao-operadores" class="row mt-5">
+
+        {# Formulário para Criação de Novos Operadores ou Administradores #}
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm p-4 border-0">
+                <h4 class="fw-bold mb-3 text-dark">Criar Novo Operador / Admin</h4>
+                <form method="POST" action="{{ url_for('criar_operador') }}">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nome Completo</label>
+                        <input type="text" name="nome" class="form-control" required placeholder="Ex: Carlos Silva">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <input type="email" name="email" class="form-control" required placeholder="carlos@luxurywheels.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Palavra-passe</label>
+                        <input type="password" name="password" class="form-control" required placeholder="••••••••">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nível de Acesso (Papel)</label>
+                        <select name="papel" class="form-select" required>
+                            <option value="operador" selected>Operador</option>
+                            {# Apenas o Administrador Principal pode criar novos administradores #}
+                            {% if session.get('email') == 'admin@luxurywheels.com' %}
+                            <option value="admin">Administrador</option>
+                            {% endif %}
+                        </select>
+                        {% if session.get('email') != 'admin@luxurywheels.com' %}
+                        <div class="form-text text-muted">Apenas o Administrador Principal pode criar outros Administradores.</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100 fw-bold">Criar Utilizador</button>
+                </form>
+            </div>
+        </div>
+
+        {# Tabela de Listagem e Gestão de Operadores e Admins Registados #}
+        <div class="col-md-7 mb-4">
+            <div class="card shadow-sm p-4 border-0">
+                <h4 class="fw-bold mb-3 text-dark">Operadores e Administradores Registados</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Papel</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {# Iteração por cada utilizador registado #}
+                            {% for u in utilizadores %}
+                            <tr>
+                                <td class="fw-bold">{{ u.nome }}</td>
+                                <td><small>{{ u.email }}</small></td>
+                                <td>
+                                    {# Distinção visual de papéis através de badges coloridos #}
+                                    <span class="badge bg-{{ 'warning text-dark' if u.papel == 'admin' else ('info text-dark' if u.papel == 'operador' else 'secondary') }}">
+                                        {{ u.papel|upper }}
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    {# Controlo de permissões de edição e eliminação #}
+                                    {% if u.papel == 'operador' or session.get('email') == 'admin@luxurywheels.com' %}
+                                        {% if u.email != 'admin@luxurywheels.com' %}
+                                        <a href="{{ url_for('editar_utilizador', id=u.id) }}" class="btn btn-sm btn-outline-dark me-1">Editar</a>
+                                        <a href="{{ url_for('eliminar_utilizador', id=u.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem a certeza que deseja eliminar este utilizador?');">Eliminar</a>
+                                        {% else %}
+                                        <span class="text-muted small">Principal</span>
+                                        {% endif %}
+                                    {% else %}
+                                    <span class="text-muted small">Sem permissão</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

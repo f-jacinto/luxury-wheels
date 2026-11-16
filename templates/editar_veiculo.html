@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-4" style="max-width: 800px;">
+    <div class="card shadow-sm p-4 border-0">
+
+        {# Título dinâmico com a marca e o modelo do veículo a ser editado #}
+        <h3 class="fw-bold mb-4 text-dark">Editar Veículo: {{ veiculo.marca }} {{ veiculo.modelo }}</h3>
+
+        {# Formulário para atualização dos dados e imagens do veículo #}
+        <form method="POST" enctype="multipart/form-data">
+
+            {# Campos de Identificação Básica (Marca e Modelo) #}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Marca</label>
+                    <input type="text" name="marca" class="form-control" value="{{ veiculo.marca }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Modelo</label>
+                    <input type="text" name="modelo" class="form-control" value="{{ veiculo.modelo }}" required>
+                </div>
+            </div>
+
+            {# Classificação, Tipo e Tipo de Combustível (com seleções pré-preenchidas) #}
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Tipo</label>
+                    <select name="tipo" class="form-select" required>
+                        <option value="Carro" {% if veiculo.tipo == 'Carro' %}selected{% endif %}>Carro</option>
+                        <option value="Moto" {% if veiculo.tipo == 'Moto' %}selected{% endif %}>Moto</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Categoria</label>
+                    <select name="categoria" class="form-select" required>
+                        <option value="Utilitário" {% if veiculo.categoria == 'Utilitário' %}selected{% endif %}>Utilitário</option>
+                        <option value="Desportivo" {% if veiculo.categoria == 'Desportivo' %}selected{% endif %}>Desportivo</option>
+                        <option value="SUV" {% if veiculo.categoria == 'SUV' %}selected{% endif %}>SUV</option>
+                        <option value="Sedan" {% if veiculo.categoria == 'Sedan' %}selected{% endif %}>Sedan</option>
+                        <option value="Premium" {% if veiculo.categoria == 'Premium' %}selected{% endif %}>Premium</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Combustível</label>
+                    <select name="combustivel" class="form-select" required>
+                        <option value="Gasolina" {% if veiculo.combustivel == 'Gasolina' %}selected{% endif %}>Gasolina</option>
+                        <option value="Gasóleo" {% if veiculo.combustivel == 'Gasóleo' %}selected{% endif %}>Gasóleo</option>
+                        <option value="Elétrico" {% if veiculo.combustivel == 'Elétrico' %}selected{% endif %}>Elétrico</option>
+                        <option value="Híbrido" {% if veiculo.combustivel == 'Híbrido' %}selected{% endif %}>Híbrido</option>
+                    </select>
+                </div>
+            </div>
+
+            {# Capacidade de Passageiros e Custo da Diária #}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Capacidade (Lugares)</label>
+                    <input type="number" name="capacidade" class="form-control" value="{{ veiculo.capacidade }}" required min="1">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Valor Diária (€)</label>
+                    <input type="number" step="0.01" name="valor_diaria" class="form-control" value="{{ veiculo.valor_diaria }}" required>
+                </div>
+            </div>
+
+            {# Controlo de Datas Técnicas (Revisões e Legalização) #}
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Última Revisão</label>
+                    <input type="date" name="data_ultima_revisao" class="form-control" value="{{ veiculo.data_ultima_revisao }}" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Próxima Revisão</label>
+                    <input type="date" name="data_proxima_revisao" class="form-control" value="{{ veiculo.data_proxima_revisao }}" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Última Legalização</label>
+                    <input type="date" name="data_ultima_legalizacao" class="form-control" value="{{ veiculo.data_ultima_legalizacao }}" required>
+                </div>
+            </div>
+
+            <hr class="my-4">
+            <h5 class="fw-bold mb-3">Atualizar Imagem (Opcional)</h5>
+
+            {# Secção para substituição de fotografia (via ficheiro local ou URL externo) #}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Carregar Ficheiro Local</label>
+                <input type="file" name="imagem_file" class="form-control" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Ou Inserir URL da Imagem</label>
+                <input type="url" name="imagem_url_externa" class="form-control" placeholder="https://exemplo.com/imagem.jpg">
+            </div>
+
+            {# Botões de Ação: Cancelar e Guardar Alterações #}
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <a href="{{ url_for('pesquisa') }}" class="btn btn-outline-secondary fw-bold">Cancelar</a>
+                <button type="submit" class="btn btn-warning fw-bold px-4">Guardar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

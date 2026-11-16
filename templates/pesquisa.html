@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    {# ========================================== #}
+    {# FORMULÁRIO LATERAL DE FILTROS DE PESQUISA  #}
+    {# ========================================== #}
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm p-3 border-0">
+            <h5 class="mb-3 fw-bold">Filtrar {{ 'Frota' if session.get('papel') in ['admin', 'operador'] else 'Veículos' }}</h5>
+
+            {# Formulário GET para submissão dos critérios de filtragem #}
+            <form method="GET" action="{{ url_for('pesquisa') }}">
+                <div class="mb-2">
+                    <label class="form-label">Marca</label>
+                    <input type="text" name="marca" class="form-control" value="{{ request.args.get('marca', '') }}">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Modelo</label>
+                    <input type="text" name="modelo" class="form-control" value="{{ request.args.get('modelo', '') }}">
+                </div>
+
+                {# Filtro por Tipo de Veículo (Carro ou Moto) #}
+                <div class="mb-2">
+                    <label class="form-label">Tipo</label>
+                    <select name="tipo" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="Carro" {% if request.args.get('tipo') == 'Carro' %}selected{% endif %}>Carro</option>
+                        <option value="Moto" {% if request.args.get('tipo') == 'Moto' %}selected{% endif %}>Moto</option>
+                    </select>
+                </div>
+
+                {# Filtro por Categoria #}
+                <div class="mb-2">
+                    <label class="form-label">Categoria</label>
+                    <select name="categoria" class="form-select">
+                        <option value="">Todas</option>
+                        <option value="Utilitário" {% if request.args.get('categoria') == 'Utilitário' %}selected{% endif %}>Utilitário</option>
+                        <option value="Desportivo" {% if request.args.get('categoria') == 'Desportivo' %}selected{% endif %}>Desportivo</option>
+                        <option value="SUV" {% if request.args.get('categoria') == 'SUV' %}selected{% endif %}>SUV</option>
+                        <option value="Sedan" {% if request.args.get('categoria') == 'Sedan' %}selected{% endif %}>Sedan</option>
+                        <option value="Premium" {% if request.args.get('categoria') == 'Premium' %}selected{% endif %}>Premium</option>
+                    </select>
+                </div>
+
+                {# Filtro por Tipo de Combustível #}
+                <div class="mb-2">
+                    <label class="form-label">Combustível</label>
+                    <select name="combustivel" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="Gasolina" {% if request.args.get('combustivel') == 'Gasolina' %}selected{% endif %}>Gasolina</option>
+                        <option value="Gasóleo" {% if request.args.get('combustivel') == 'Gasóleo' %}selected{% endif %}>Gasóleo</option>
+                        <option value="Elétrico" {% if request.args.get('combustivel') == 'Elétrico' %}selected{% endif %}>Elétrico</option>
+                        <option value="Híbrido" {% if request.args.get('combustivel') == 'Híbrido' %}selected{% endif %}>Híbrido</option>
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Valor Máx. Diária (€)</label>
+                    <input type="number" step="0.01" name="valor_diaria" class="form-control" value="{{ request.args.get('valor_diaria', '') }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Qtd. Pessoas</label>
+                    <input type="number" name="quantidade_pessoas" class="form-control" value="{{ request.args.get('quantidade_pessoas', '') }}">
+                </div>
+
+                {# Botão de submissão dos filtros #}
+                <button type="submit" class="btn btn-dark w-100 fw-bold">Aplicar Filtros</button>
+            </form>
+        </div>
+    </div>
+
+    {# ========================================== #}
+    {# LISTAGEM DE VEÍCULOS / GESTÃO DA FROTA     #}
+    {# ========================================== #}
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
+            {# Cabeçalho dinâmico consoante o papel do utilizador #}
+            <h2 class="fw-bold mb-0">
+                {{ 'Gestão da Frota (Empresa)' if session.get('papel') in ['admin', 'operador'] else 'Veículos Disponíveis' }}
+            </h2>
+
+            {# Botão exclusivo para administradores e operadores adicionarem novos veículos #}
+            {% if session.get('papel') in ['admin', 'operador'] %}
+            <a href="{{ url_for('adicionar_veiculo') }}" class="btn btn-warning fw-bold px-4 py-2 shadow-sm">
+                + Adicionar Novo Veículo
+            </a>
+            {% endif %}
+        </div>
+
+        {# Grelha de apresentação dos veículos #}
+        <div class="row">
+            {% for item in veiculos_com_estado %}
+            {% set veiculo = item.veiculo %}
+            {% set apto = item.apto %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0 position-relative">
+
+                    {# Capa de aviso caso o veículo não esteja apto (revisão ou legalização em falta) #}
+                    {% if not apto %}
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-75 rounded" style="z-index: 1; pointer-events: none;">
+                        <span class="badge bg-danger fs-6 px-3 py-2 shadow text-uppercase">Indisponível (Revisão / Legalização)</span>
+                    </div>
+                    {% endif %}
+
+                    <img src="{{ url_for('static', filename=veiculo.imagem_url) }}" class="card-img-top" alt="{{ veiculo.modelo }}" style="height: 180px; object-fit: cover;">
+
+                    <div class="card-body d-flex flex-column" style="z-index: 2;">
+                        <h5 class="card-title fw-bold text-dark mb-1">{{ veiculo.marca }} {{ veiculo.modelo }}</h5>
+                        <p class="card-text text-muted mb-1"><small>{{ veiculo.tipo }} | {{ veiculo.categoria }} | {{ veiculo.combustivel or 'Gasolina' }}</small></p>
+                        <p class="card-text mb-1">Capacidade: {{ veiculo.capacidade }} pessoas</p>
+                        <p class="card-text fw-bold text-success mb-3">{{ "%.2f"|format(veiculo.valor_diaria) }} € / dia</p>
+
+                        {# Ações disponíveis no cartão consoante o papel do utilizador #}
+                        <div class="mt-auto d-flex flex-column gap-2">
+                            {% if session.get('papel') in ['admin', 'operador'] %}
+                                {# Opções de gestão de destaque e edição para administradores/operadores #}
+                                <a href="{{ url_for('toggle_destaque', veiculo_id=veiculo.id) }}"
+                                   class="btn btn-sm {{ 'btn-warning text-dark fw-bold' if veiculo.destaque else 'btn-outline-secondary' }} w-100">
+                                   {{ '★ Remover dos Destaques' if veiculo.destaque else '☆ Destacar no Carrossel' }}
+                                </a>
+
+                                <a href="{{ url_for('editar_veiculo', veiculo_id=veiculo.id) }}"
+                                   class="btn btn-sm btn-dark w-100 fw-bold">
+                                   ✏️ Editar Veículo
+                                </a>
+                            {% else %}
+                                {# Opção de reserva para clientes normais (apenas se o veículo estiver apto) #}
+                                {% if apto %}
+                                <a href="{{ url_for('reservar', veiculo_id=veiculo.id) }}" class="btn btn-warning w-100 text-dark fw-bold">Reservar</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            {# Alerta apresentado caso nenhum veículo corresponda aos filtros #}
+            <div class="col-12">
+                <div class="alert alert-warning border-0 shadow-sm">Nenhum veículo encontrado com os critérios selecionados.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow p-4 border-0">
+
+            {# Cabeçalho com identificação da reserva em gestão #}
+            <h2 class="mb-4 fw-bold">Gerir Reserva #{{ reserva.id }}</h2>
+
+            {# Informações detalhadas da reserva atual (veículo, estado, pagamento e valor) #}
+            <div class="mb-4">
+                <h5>Veículo: {{ reserva.veiculo.marca }} {{ reserva.veiculo.modelo }}</h5>
+                <p class="text-muted mb-1">Estado atual: <span class="badge bg-success">{{ reserva.estado }}</span></p>
+                <p class="text-muted mb-1">Forma de Pagamento: <strong>{{ reserva.forma_pagamento }}</strong></p>
+                <p class="text-muted">Valor Total: <strong class="text-success">{{ "%.2f"|format(reserva.valor_total) }} €</strong></p>
+            </div>
+
+            {# Formulário para alteração de datas ou cancelamento da reserva #}
+            <form method="POST">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Nova Data de Início</label>
+                        <input type="date" name="data_inicio" value="{{ reserva.data_inicio }}" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Nova Data de Fim</label>
+                        <input type="date" name="data_fim" value="{{ reserva.data_fim }}" class="form-control" required>
+                    </div>
+                </div>
+
+                {# Botões de ação: Atualizar datas ou cancelar a reserva (com confirmação em JavaScript) #}
+                <div class="d-flex justify-content-between gap-2 mt-4">
+                    <button type="submit" name="acao" value="alterar" class="btn btn-primary w-50 fw-bold shadow-sm">Atualizar Datas</button>
+                    <button type="submit" name="acao" value="cancelar" class="btn btn-danger w-50 fw-bold shadow-sm" onclick="return confirm('Tens a certeza de que pretendes cancelar esta reserva?');">Cancelar Reserva</button>
+                </div>
+            </form>
+
+            {# Ligação de retorno à página de listagem de reservas #}
+            <div class="mt-3 text-center">
+                <a href="{{ url_for('minhas_reservas') }}" class="text-decoration-none text-muted">← Voltar às minhas reservas</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

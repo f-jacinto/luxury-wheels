@@ -1,0 +1,29 @@
+====================================================================
+               LUXURY WHEELS - PLATAFORMA WEB
+====================================================================
+
+O projeto chama-se Luxury Wheels. É uma plataforma web de aluguer de veículos que criei a pensar tanto nas pessoas que querem alugar um carro ou uma moto, como na própria empresa que precisa de gerir a frota no dia a dia.
+
+Para desenvolver este projeto, utilizei Python com Flask para toda a parte do backend e lógica do site, e Bootstrap 5 com HTML e CSS para construir uma interface moderna, apelativa e que funciona bem em qualquer ecrã.
+
+Partes principais do sistema:
+
+1. Cliente:
+- O utilizador pode navegar pela frota e usar vários filtros práticos - pode pesquisar por marca, modelo, se é carro ou moto, a categoria, o tipo de combustível e o valor máximo por dia.
+- Quando escolhe um veículo e vai para a página de reserva, tem um simulador simples feito em JavaScript que calcula automaticamente o valor total em tempo real, conforme as datas que seleciona e o método de pagamento.
+- Depois de reservar, o cliente tem a sua área de 'As Minhas Reservas', onde pode acompanhar o estado dos agendamentos e, se precisar, gerir ou cancelar a reserva.
+
+2. Empresa e Gestão:
+- Do lado da gestão, temos perfis de Operador e Administrador.
+- O sistema permite adicionar e editar veículos, com a facilidade de podermos carregar uma imagem diretamente do computador ou colar um link de uma foto.
+- Uma funcionalidade importante que implementei foi o controlo de manutenção: o sistema verifica as datas de revisão e de legalização e, se o veículo tiver a revisão ou a legalização caducadas, fica logo marcado como indisponível e não deixa os clientes alugarem.
+- Além disso, os operadores conseguem escolher com um simples clique quais os veículos que querem destacar no carrossel da página principal.
+- No Painel de Administração, o admin pode gerir as contas, criar novos operadores e controlar os acessos ao sistema.
+
+Com o meu projeto tentei criar uma plataforma web simples de usar tanto para o cliente como para a empresa com ferramentas úteis para a gestão de um negócio real de uma rent-a-car.
+
+Nota para testes / avaliação:
+Como exemplo foram criados os seguintes utilizadores para testar as funcionalidades do lado do cliente e da empresa:
+- Cliente: joao@gmail.com | pass: 1234
+- Administrador: admin@luxurywheels.com | pass: admin123
+====================================================================
